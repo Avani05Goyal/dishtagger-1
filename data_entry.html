@@ -1,0 +1,298 @@
+<!-- templates/profile.html -->
+
+<html>
+
+<head>
+
+  <title>Welcome</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  
+<style>
+/* 
+.row{
+  margin-bottom: 20px;
+  
+} */
+
+.col-6{
+padding-top:20px;
+padding-bottom:20px;
+/* margin-left: 100px;  */
+}
+.card{
+  width: 540px;
+ 
+}
+
+
+
+
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: portrait)   
+{ 
+
+.col-6{max-width: 100%;}
+ 
+.offset-3{
+    margin-left: 10%;
+}  
+
+  
+  } 
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: landscape) 
+{ 
+
+.col-6{max-width: 100%;}
+.offset-3{
+  margin-left: 20%;
+} 
+
+
+   
+}
+
+/* mobile */
+@media only screen   
+and (min-device-width : 360px)   
+and (max-device-width : 640px)  
+and (orientation: portrait)
+{
+.card{
+  width:300px;
+  
+  } 
+
+.col-6{
+  max-width: 100%;
+}
+.offset-3{
+  margin-left: 0%;
+}
+
+   
+}
+@media only screen   
+and (min-device-width : 360px)   
+and (max-device-width : 640px)  
+and (orientation: landscape)
+{
+.card{
+  width:490px;
+
+  } 
+.col-6{
+  max-width: 100%;
+  
+}
+.offset-3{
+  margin-left: 2%;
+}
+
+  
+}
+</style>
+
+<script type='text/javascript'>
+
+function Fvali(){ 
+  var x = document.forms["form2"]["file"].value;
+            
+
+  if (x == "") {
+    alert("select file before clicking submit");
+    return false;
+            }
+  } 
+
+  $(document).ready(function() {
+       $('#form1').on('submit', function(event) {
+        
+         $.ajax({
+            data : {
+              dname : $('#dname').val(),
+               price : $('#price').val(),
+               
+                   },
+               type : 'POST',
+               url : '/add_dish',
+               success: function(){
+                window.location.href ='/upload';
+			},
+			error: function(data){
+      alert(data);
+        }
+
+              });
+              
+          
+        event.preventDefault();
+        });
+  });
+
+
+
+
+  $(document).ready(function() {
+       $('#form2').on('submit', function(event) {
+        var data = new FormData();
+  data.append('file',$("#file")[0].files[0]);
+        
+         $.ajax({
+            data : data,
+            enctype: 'multipart/form-data',
+               type : 'POST',
+               url : '/fileup',
+
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data){
+                 if(data.error)
+                 {$('#warning').text(data.error).show();
+              
+                  }
+                   else
+                    {
+                      // $('#warning').text(data.success).show();    
+window.location.href ='/upload' ;}
+			},
+			error: function(data){
+       
+        alert("error occured");
+        }
+
+ });
+              
+          
+        event.preventDefault();
+        });
+  });
+$(document).ready(function () {
+
+$('.second-button').on('click', function () {
+
+  // $('.animated-icon1').toggleClass('open');
+  // $('#ChangeToggle').click(function() {
+    $('#navbar-hamburger').toggleClass('hidden');
+    $('#navbar-close').toggleClass('hidden');  
+  });
+});
+
+
+// aria-expanded="false" 
+</script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-xl bg-dark navbar-dark sticky-top justify-content-end">
+    <!-- <div class="container">
+        <div class="navbar-header">  -->
+<button class="navbar-toggler second-button" type="button" data-toggle="collapse" data-target="#collaspe_menu">
+    <span class="navbar-toggler-icon"></span> 
+ 
+  </button>
+       <!-- </div>  -->
+  <div class="collapse navbar-collapse justify-content-end" id="collaspe_menu">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/profile"><b>Home</b></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout"><b>Logout</b></a>
+      </li> 
+    </ul>
+  </div>
+  <!-- </div> -->
+  </nav>  
+
+ 
+
+
+
+     <div class="alert alert-info" id="warning" style="display: none;"> 
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> 
+      
+   </div>
+ 
+       
+  <div class="container-fluid">
+   
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#form">Form</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#ce">CSV/Excel</a>
+      </li>
+      
+    </ul>
+
+
+  
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div id="form" class="container tab-pane active"><br>
+        <div class="row">
+          <div class="offset-3 col-6" style="background-color:lavender;">
+            <div class="card">
+              <div class="card-header" > 
+        <form method="POST" id="form1">
+          <div class="form-group">
+            <label for="DishName">DishName:</label>
+            <input type="text" class="form-control" id="dname" placeholder="Enter Your Dish" required>
+          </div>
+          <div class="form-group">
+            <label for="Price">Price:</label>
+            <input type="number" class="form-control" id="price" placeholder="Enter Your price" required>
+          </div>
+         
+          <div class="d-flex justify-content-center mt-3 login_container">
+            <button type="submit" class="btn btn-primary">Add More Dish..</button></div>
+          </form>
+          </div>
+          </div>
+           </div>
+           </div>
+           
+      </div>
+      <div id="ce" class="container tab-pane fade"><br>
+        <div class="row">
+          <div class="offset-3 col-6" style="background-color:lavenderblush;">
+            <div class="card">
+              <div class="card-header" > 
+        <form  method="POST" enctype="multipart/form-data" id="form2" >
+          
+          <div class="form-group">
+            <h3>Upload your menu here:</h3><br>
+            <input type="file" class="form-control-file border" id="file" required>
+          </div>
+          <div class="d-flex justify-content-center mt-3 login_container">
+          <button type="submit" class="btn btn-primary" >Submit</button></div>
+        </form>
+        </div>
+        </div>
+      </div>
+      </div>
+      </div>
+     
+    
+
+   
+    
+    
+
+
+
+    </div>
+   
+      
+     
+
+  
+    
+</body>
+
+</html>

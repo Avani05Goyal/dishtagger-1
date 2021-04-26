@@ -1,0 +1,352 @@
+<!-- templates/profile.html -->
+
+<html>
+
+<head>
+
+  <title>Welcome</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ 
+  
+<style>
+
+.card{
+width:400px;
+margin-top: 15px;
+
+}
+
+
+
+/* ipad */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)   
+{ 
+.card{
+  width:400px;
+ 
+ 
+}
+.col-6{max-width: 70%;}
+.offset-3 {
+    margin-left: 20%;
+}
+}
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: landscape) 
+{ 
+
+.card{
+  width:400px;
+/* height: 700px; */
+ 
+}
+.col-6{max-width: 70%;}
+.offset-3 {
+    margin-left: 25%;
+}
+}
+@media only screen   
+and (min-device-width : 360px)   
+and (max-device-width : 640px)  
+and (orientation: portrait)
+{
+.card{
+  width:350px;
+  /* margin-left: 15px; */
+   /* margin-top: 15px; */
+  /* margin-bottom: 10px;  */
+  }
+  
+
+ .col-6{
+  max-width: 100%;
+}
+.offset-3{ 
+  margin-left: 0%;
+} 
+}
+@media only screen   
+and (min-device-width : 360px)   
+and (max-device-width : 640px)  
+and (orientation: landscape)
+{
+.card{
+  width:400px;
+  margin-left: 10px;
+   /* margin-top: 15px; */ 
+  /* margin-bottom: 10px;  */
+  }
+ .col-6{
+  max-width: 100%;
+}
+.offset-3{ 
+  margin-left: 9%;
+} 
+}
+</style> 
+
+
+</head>
+<body>
+  <script>
+          
+
+$(document).ready(function() {
+  $.ajax({
+           
+    type : 'GET',
+    url: "http://localhost:5000/hello",
+    // dataType: 'jsonp',
+    // mode: 'cors',
+    crossDomain: true,
+    // jsonpCallback: false,
+    // dataType: 'json',
+    // mode: 'cors',
+    // jsonp: false,
+    contentType: 'application/json',
+    // Sec-Fetch-Mode:cors,
+
+    // Access-Control-Allow-Headers:*,
+  
+  
+    success: function(data){
+
+      console.log("hello");
+      console.log(data.msg);
+      // console.log(data.data.length);
+
+      
+      if(data.msg){
+                    console.log("hello world");
+                    $('#wel').text(data.msg).show();
+                  }
+      if(data.data.length!=10){
+                  $("#seemore").html('no more items');
+                  $("#seemore").css("visibility", "visible");
+                  }
+
+     
+ 
+                $.each(data.data,function(k,v){
+        
+                  var c=$('<div class="card">');
+                  var center=$('<div class="d-flex justify-content-center"> ');
+                  var h= $('<div class="card-header">').attr('id',"cardh_no_"+k); 
+
+                  var ro1= $('<div class="row" style="padding-bottom:10px">');
+                  var ro2= $('<div class="row">');
+                    
+                  
+                  var col_1= $('<div class="col order-first" style="height:auto; width:300px; font-weight:bold; font-size:32px; margin-left:0px">').text(v['dishname']); 
+                  // col_1.attr('font-weight',"bold");
+                  var col_2= $('<div class="col order-last" style="width:50px;">');
+                  if(v['vnv']=='nv'){
+                  var bg= $('<span class="badge badge-danger float-right mt-2">').text(v['vnv']); }
+                  else{
+                    var bg= $('<span class="badge badge-success float-right mt-2">').text(v['vnv']);
+                  }
+                 
+                  
+                // var col_3= $('<div class="col order-first">').text('Category:'+v['category']);  
+                // var col_4= $('<div class="col order-last">').text('Price:'+v['price']);
+                  var col_3= $('<div class="col order-first" style:"margin-left:10px; width:100px">').text('Category:'+v['category']);  
+                var col_4= $('<div class="col order-last">').text('Price:'+v['price']);
+                
+                
+                col_2.append(bg);
+                ro1.append(col_1);
+                ro1.append(col_2);
+                ro2.append(col_3);
+                ro2.append(col_4);
+
+                h.append(ro1);
+                h.append(ro2);
+
+
+                c.append(h);
+                center.append(c);
+                $('#col1').append(center);
+              
+
+              });
+    
+      
+   },
+      error: function(data){
+       if(data.error){
+        $('#warning').text(data.error).show();
+       }
+        
+        }
+
+});
+
+});
+var i=0;
+$(document).ready(function() {
+       $('#seemore').on('click', function(event) {
+        console.log(i);
+        var pgno={pgno:i+1}
+         $.ajax({
+            data : JSON.stringify(pgno),
+          
+          
+              
+               type : 'POST',
+               url : '/jsonres',
+               dataType: 'jsonp',
+               mode: 'cors',
+               contentType: 'application/json',
+               success: function(data){
+           
+                console.log("hello");
+                console.log(data.data.length)
+                if(data.data.length!=10){
+                  $("#seemore").html('no more items');
+                  $("#seemore").css("visibility", "visible");}
+                  if(!data){
+                  $("#seemore").html('no more items');}
+    
+     
+ 
+                $.each(data.data,function(k,v){
+        
+                  var c=$('<div class="card">');
+                  var center=$('<div class="d-flex justify-content-center"> ');
+                  var h= $('<div class="card-header">').attr('id',"cardh_no_"+k); 
+
+                  var ro1= $('<div class="row" style="padding-bottom:10px">');
+                  var ro2= $('<div class="row">');
+                    
+
+                  var col_1= $('<div class="col order-first" style="height:auto; width:300px; font-weight:bold; font-size:32px; margin-left:0px">').text(v['dishname']); 
+                  var col_2= $('<div class="col order-last" style="width:50px;">');
+                  if(v['vnv']=='nv'){
+                  var bg= $('<span class="badge badge-danger float-right mt-2">').text(v['vnv']); }
+                  else{
+                    var bg= $('<span class="badge badge-success float-right mt-2">').text(v['vnv']);
+                  }
+                 
+                  
+                // var col_3= $('<div class="col order-first">').text('Category:'+v['category']);  
+                // var col_4= $('<div class="col order-last">').text('Price:'+v['price']);
+
+                  var col_3= $('<p class="first">').text('Category:'+v['category']);  
+                var col_4= $('<div class="col order-last">').text('Price:'+v['price']);
+
+                
+                col_2.append(bg);
+                ro1.append(col_1);
+                ro1.append(col_2);
+                ro2.append(col_3);
+                ro2.append(col_4);
+
+                h.append(ro1);
+                h.append(ro2);
+
+
+                c.append(h);
+                center.append(c);
+                $('#col1').append(center);
+                
+              
+
+              });
+              i++;
+    
+
+      },
+      error: function(data){
+        if(data.error){
+        // $("#seemore").html('no more items');
+        // $("#seemore").css("visibility", "visible");
+        $('#warning').text(data.error).show();}
+        
+        // $("#seemore").css('visibility', 'hidden');
+        }
+
+ });
+              
+         
+event.preventDefault();
+        });
+  });
+  $(document).ready(function () {
+
+$('.first-button').on('click', function () {
+
+  // $('.animated-icon1').toggleClass('open');
+  // $('#ChangeToggle').click(function() {
+    $('#navbar-hamburger').toggleClass('hidden');
+    $('#navbar-close').toggleClass('hidden');  
+  });
+});
+  </script>
+
+  
+ 
+  <nav class="navbar navbar-expand-xl bg-dark navbar-dark sticky-top justify-content-end">
+    <button class="navbar-toggler first-button" type="button" data-toggle="collapse" data-target="#collaspe_menu">
+      <span class="navbar-toggler-icon"></span> 
+    
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="collaspe_menu">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/profile"><b>Home</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/upload"><b>Upload</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout"><b>Logout</b></a>
+
+
+        </li> 
+      </ul>
+    </div>
+    </nav> 
+
+           
+       <h1 id="wel"></h1> 
+
+
+     <div class="alert alert-info" id="warning" style="display: none;">
+
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> 
+      
+      </div>
+    
+  
+
+
+      <div class="container"> 
+
+       
+        <div class="row">
+          <div class="offset-3 col-6" style="background-color: lavenderblush;" id="col1" >
+           
+        
+         
+            
+        
+        </div>
+       
+        </div>
+      </div>
+        <div class="d-flex justify-content-center" style="margin-top: 15px;"> 
+          <a href="#" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true" id="seemore" style="visibility: hidden;">See More..</a>
+        </div>  
+          
+  
+
+  
+     <!-- </div> -->
+</body>
+
+</html>
